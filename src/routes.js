@@ -65,6 +65,11 @@ routes = [
     path: '/riwayat/{user_id}', 
     handler: getRiwayatHandler, 
   },
+  {
+    method: "GET",
+    path: "/",
+    handler: () => "Ini adalah halaman utama",
+  }
 ];
 
 module.exports = routes;
