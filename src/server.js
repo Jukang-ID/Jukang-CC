@@ -3,14 +3,14 @@ const routes = require('./routes');
 
 const init = async () => {
     const server = Hapi.server({
-        port: 8000,
-        host: 'localhost',
+        port: process.env.PORT || 8000, // Gunakan PORT dari environment variable jika ada
+        host: '0.0.0.0', // Setting host ke 0.0.0.0 untuk deployment di Vercel
     });
 
     server.route(routes);
 
     await server.start();
     console.log('Server running on %s', server.info.uri);
-}
+};
 
 init();
