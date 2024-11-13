@@ -452,3 +452,6 @@ const getDetailTukang = async (request, h) => {
 }
 
 module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler,updateTukang , getDetailTukang};
+
+
+// push api
