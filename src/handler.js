@@ -1,6 +1,7 @@
 const { nanoid } = require("nanoid");
 const db = require("./firebase");
 const { messaging } = require("firebase-admin");
+const {v4: uuidv4} = require('uuid');
 
 const registerHandler = async (request, h) => {
   const { namalengkap, nomortelp, email, password } = request.payload;
@@ -45,8 +46,9 @@ const registerHandler = async (request, h) => {
 };
 
 const addTukang = async (request, h) => {
-  const tukang_id = nanoid(10);
-  const photoUrl = "https://i.pravatar.cc/300";
+  const tukang_id = uuidv4();
+  const photoNumber = Math.floor(Math.random() * 70) + 1;
+  const photoUrl = `https://i.pravatar.cc/300?img=${photoNumber}`;
   const price = Math.floor(Math.random() * (150000 - 50000 + 1)) + 50000;
   const priceRupiah = price.toLocaleString("id-ID", {
     currency: "IDR",
@@ -89,10 +91,12 @@ const updateTukang = async (request, h) => {
   const { namatukang, spesialis, review, booked } = request.payload;
 
   if (!tukang_id) {
-    return h.response({
-      status: "fail",
-      message: "Tukang ID tidak ditemukan",
-    }).code(400);
+    return h
+      .response({
+        status: "fail",
+        message: "Tukang ID tidak ditemukan",
+      })
+      .code(400);
   }
 
   const updatedtukang = { namatukang, spesialis, review, booked };
@@ -116,7 +120,6 @@ const updateTukang = async (request, h) => {
       .code(500);
   }
 };
-
 
 const getAlluser = async (request, h) => {
   try {
@@ -425,34 +428,33 @@ const getDetailTukang = async (request, h) => {
 
   try {
     const tukangSnapshot = await db.collection("TUKANG").doc(tukang_id).get();
-    if (!tukangSnapshot.exists){
+    if (!tukangSnapshot.exists) {
       const response = h.response({
-        status: 'fail',
-        message: 'Tukang tidak ditemukan'
+        status: "fail",
+        message: "Tukang tidak ditemukan",
       });
       response.code(404);
       return response;
     }
     const tukangs = tukangSnapshot.data();
     const response = h.response({
-      status: 'success',
-      detailTukang: tukangs
+      status: "success",
+      detailTukang: tukangs,
     });
     response.code(200);
     return response;
   } catch (error) {
     const response = h.response({
-      status: 'fail',
-      message: 'Tukang gagal ditemukan',
-      error: error.message
+      status: "fail",
+      message: "Tukang gagal ditemukan",
+      error: error.message,
     });
     response.code(404);
     return response;
   }
-}
+};
 
-module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler,updateTukang , getDetailTukang};
-
+module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler, updateTukang, getDetailTukang };
 
 // push api
 
