@@ -84,6 +84,31 @@ const addTukang = async (request, h) => {
   }
 };
 
+const updateTukang = async (request, h) => {
+  const { tukang_id } = request.params;
+  const { namatukang, spesialis, review } = request.payload;
+  const updatedtukang = { namatukang, spesialis, review };
+
+  try {
+    await db.collection("TUKANG").doc(tukang_id).update(updatedtukang);
+    return h
+      .response({
+        status: "success",
+        message: "Tukang berhasil diperbarui",
+        tukang: updatedtukang,
+      })
+      .code(200);
+  } catch (error) {
+    return h
+      .response({
+        status: "fail",
+        message: "Tukang gagal diperbarui",
+        error: error.message,
+      })
+      .code(500);
+  }
+};
+
 const getAlluser = async (request, h) => {
   try {
     const usersSnapshot = await db.collection("USER").get();
@@ -386,4 +411,4 @@ const getRiwayatHandler = async (request, h) => {
   }
 };
 
-module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler };
+module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler,updateTukang };

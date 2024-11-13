@@ -10,6 +10,7 @@ const {
   addTransaksiHandler,
   getTransaksiHandler,
   getRiwayatHandler,
+  updateTukang,
 } = require("./handler");
 
 routes = [
@@ -38,6 +39,11 @@ routes = [
     path: "/tukang/{user_id}",
     handler: getDataBeranda,
   },
+{
+    method: "POST",
+    path: "/tukang/{user_id}",
+    handler: updateTukang,
+},
   {
     method: "GET",
     path: "/detailprofile/{user_id}",
