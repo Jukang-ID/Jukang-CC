@@ -47,8 +47,14 @@ const registerHandler = async (request, h) => {
 const addTukang = async (request, h) => {
   const tukang_id = nanoid(10);
   const photoUrl = "https://i.pravatar.cc/300https://i.pravatar.cc/300";
+  const price = Math.floor(Math.random() * (150000 - 50000 + 1)) + 50000;
+  const priceFormat = price.toLocaleString('id-ID',{
+    currency: 'IDR',
+    style: 'currency'
+  })
+
   const { namatukang, spesialis, review, booked } = request.payload;
-  const newtukang = { tukang_id, namatukang, spesialis, review, booked, photoUrl };
+  const newtukang = { tukang_id, namatukang, spesialis, review, booked, photoUrl,priceFormat };
   if (!namatukang || !spesialis || !review) {
     const response = h.response({
       status: "fail",
