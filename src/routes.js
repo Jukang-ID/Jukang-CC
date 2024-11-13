@@ -41,7 +41,7 @@ routes = [
     handler: getDataBeranda,
   },
 {
-    method: "PUT",
+    method: "POST",
     path: "/tukang/{tukang_id}",
     handler: updateTukang,
 },
