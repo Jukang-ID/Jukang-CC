@@ -46,7 +46,7 @@ const registerHandler = async (request, h) => {
 
 const addTukang = async (request, h) => {
   const tukang_id = nanoid(10);
-  const photoUrl = "https://i.pravatar.cc/300https://i.pravatar.cc/300";
+  const photoUrl = "https://i.pravatar.cc/300";
   const price = Math.floor(Math.random() * (150000 - 50000 + 1)) + 50000;
   const priceRupiah = price.toLocaleString("id-ID", {
     currency: "IDR",
