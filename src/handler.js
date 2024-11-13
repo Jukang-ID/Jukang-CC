@@ -48,13 +48,13 @@ const addTukang = async (request, h) => {
   const tukang_id = nanoid(10);
   const photoUrl = "https://i.pravatar.cc/300https://i.pravatar.cc/300";
   const price = Math.floor(Math.random() * (150000 - 50000 + 1)) + 50000;
-  const priceFormat = price.toLocaleString('id-ID',{
-    currency: 'IDR',
-    style: 'currency'
-  })
+  const priceRupiah = price.toLocaleString("id-ID", {
+    currency: "IDR",
+    style: "currency",
+  });
 
   const { namatukang, spesialis, review, booked } = request.payload;
-  const newtukang = { tukang_id, namatukang, spesialis, review, booked, photoUrl,priceFormat };
+  const newtukang = { tukang_id, namatukang, spesialis, review, booked, photoUrl, priceRupiah };
   if (!namatukang || !spesialis || !review) {
     const response = h.response({
       status: "fail",
@@ -70,9 +70,7 @@ const addTukang = async (request, h) => {
       .response({
         status: "success",
         message: "Tukang berhasil ditambahkan",
-        data: {
-          tukang: newtukang,
-        },
+        tukang: newtukang,
       })
       .code(201);
   } catch (error) {
@@ -114,7 +112,7 @@ const getAllTukang = async (request, h) => {
     return h
       .response({
         status: "success",
-        tukang : tukangs,
+        tukang: tukangs,
       })
       .code(200);
   } catch (error) {
@@ -185,7 +183,6 @@ const getDetailProfile = async (request, h) => {
     const response = h.response({
       status: "success",
       users,
-
     });
     response.code(200);
     return response;
