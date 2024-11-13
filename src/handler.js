@@ -420,4 +420,35 @@ const getRiwayatHandler = async (request, h) => {
   }
 };
 
-module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler,updateTukang };
+const getDetailTukang = async (request, h) => {
+  const { tukang_id } = request.params;
+
+  try {
+    const tukangSnapshot = await db.collection("TUKANG").doc(tukang_id).get();
+    if (!tukangSnapshot.exists){
+      const response = h.response({
+        status: 'fail',
+        message: 'Tukang tidak ditemukan'
+      });
+      response.code(404);
+      return response;
+    }
+    const tukangs = tukangSnapshot.data();
+    const response = h.response({
+      status: 'success',
+      detailTukang: tukangs
+    });
+    response.code(200);
+    return response;
+  } catch (error) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Tukang gagal ditemukan',
+      error: error.message
+    });
+    response.code(404);
+    return response;
+  }
+}
+
+module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler,updateTukang , getDetailTukang};

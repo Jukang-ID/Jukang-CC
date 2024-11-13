@@ -11,6 +11,7 @@ const {
   getTransaksiHandler,
   getRiwayatHandler,
   updateTukang,
+  getDetailTukang,
 } = require("./handler");
 
 routes = [
@@ -75,6 +76,11 @@ routes = [
     method: "GET",
     path: "/",
     handler: () => "Ini adalah halaman utama",
+  },
+  {
+    method: "GET",
+    path: "/detailtukang/{tukang_id}",
+    handler: getDetailTukang,
   }
 ];
 
