@@ -36,7 +36,7 @@ routes = [
   },
   {
     method: "GET",
-    path: "/tukang/{user_id}",
+    path: "/tukang/{tukang_id}",
     handler: getDataBeranda,
   },
 {
