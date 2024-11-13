@@ -317,7 +317,7 @@ const loginHandler = async (request, h) => {
 };
 
 const addTransaksiHandler = async (request, h) => {
-  const { user_id, namalengkap, deskripsi, tanggal, alamat, metodePembayaran, total } = request.payload;
+  const { user_id, namalengkap, namatukang, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total } = request.payload;
 
   if (!user_id || !namalengkap || !deskripsi || !tanggal || !alamat || !metodePembayaran || !total) {
     return h
@@ -329,7 +329,7 @@ const addTransaksiHandler = async (request, h) => {
   }
 
   const id_transaksi = nanoid(10);
-  const transaksi = { id_transaksi, user_id, namalengkap, deskripsi, tanggal, alamat, metodePembayaran, total, createdAt: new Date().toISOString() };
+  const transaksi = { id_transaksi, user_id, namalengkap, namatukang, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total, createdAt: new Date().toISOString() };
 
   try {
     await db.collection("TRANSAKSI").doc(id_transaksi).set(transaksi);
