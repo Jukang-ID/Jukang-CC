@@ -36,12 +36,12 @@ routes = [
   },
   {
     method: "GET",
-    path: "/tukang/{tukang_id}",
+    path: "/tukang/{users_id}",
     handler: getDataBeranda,
   },
 {
-    method: "POST",
-    path: "/tukang/{user_id}",
+    method: "PUT",
+    path: "/tukang/{tukang_id}",
     handler: updateTukang,
 },
   {

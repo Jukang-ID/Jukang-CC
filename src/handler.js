@@ -85,29 +85,38 @@ const addTukang = async (request, h) => {
 };
 
 const updateTukang = async (request, h) => {
-  const { tukang_id } = request.params;
-  const { namatukang, spesialis, review } = request.payload;
-  const updatedtukang = { namatukang, spesialis, review };
-
-  try {
-    await db.collection("TUKANG").doc(tukang_id).update(updatedtukang);
-    return h
-      .response({
-        status: "success",
-        message: "Tukang berhasil diperbarui",
-        tukang: updatedtukang,
-      })
-      .code(200);
-  } catch (error) {
-    return h
-      .response({
+    const { tukang_id } = request.query;
+    const { namatukang, spesialis, review, booked } = request.payload;
+  
+    if (!tukang_id) {
+      return h.response({
         status: "fail",
-        message: "Tukang gagal diperbarui",
-        error: error.message,
-      })
-      .code(500);
-  }
-};
+        message: "Tukang ID tidak ditemukan",
+      }).code(400);
+    }
+  
+    const updatedtukang = { namatukang, spesialis, review, booked };
+  
+    try {
+      await db.collection("TUKANG").doc(tukang_id).update(updatedtukang);
+      return h
+        .response({
+          status: "success",
+          message: "Tukang berhasil diperbarui",
+          tukang: updatedtukang,
+        })
+        .code(200);
+    } catch (error) {
+      return h
+        .response({
+          status: "fail",
+          message: "Tukang gagal diperbarui",
+          error: error.message,
+        })
+        .code(500);
+    }
+  };
+  
 
 const getAlluser = async (request, h) => {
   try {
