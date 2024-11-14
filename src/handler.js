@@ -375,10 +375,52 @@ const addTransaksiHandler = async (request, h) => {
   }
 
   const id_transaksi = nanoid(10);
-  const transaksi = { id_transaksi, user_id, namalengkap, namatukang, tukang_id, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total, createdAt: new Date().toISOString() };
+  const transaksi = {
+    id_transaksi,
+    user_id,
+    namalengkap,
+    namatukang,
+    tukang_id,
+    spesialis,
+    deskripsi,
+    tanggal,
+    alamat,
+    metodePembayaran,
+    total,
+    createdAt: new Date().toISOString()
+  };
 
   try {
+    // Cek apakah tukang sudah dibooking
+    const tukangDoc = await db.collection("TUKANG").doc(tukang_id).get();
+    
+    if (!tukangDoc.exists) {
+      return h
+        .response({
+          status: "fail",
+          message: "Tukang tidak ditemukan",
+        })
+        .code(404);
+    }
+
+    const tukangData = tukangDoc.data();
+
+    if (tukangData.booked === true) {
+      return h
+        .response({
+          status: "fail",
+          message: "Tukang sudah dibooking, tidak dapat melakukan pemesanan lagi.",
+        })
+        .code(400);
+    }
+
+    // Jika tukang belum dibooking, lanjutkan transaksi
     await db.collection("TRANSAKSI").doc(id_transaksi).set(transaksi);
+
+    // Update status `booked` tukang menjadi `true`
+    await db.collection("TUKANG").doc(tukang_id).update({
+      booked: true,
+    });
 
     return h
       .response({
@@ -387,6 +429,7 @@ const addTransaksiHandler = async (request, h) => {
         data: { transaksi },
       })
       .code(201);
+
   } catch (error) {
     return h
       .response({
@@ -397,6 +440,7 @@ const addTransaksiHandler = async (request, h) => {
       .code(500);
   }
 };
+
 
 const getTransaksiHandler = async (request, h) => {
   const { id_transaksi } = request.params;
