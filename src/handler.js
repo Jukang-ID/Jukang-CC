@@ -320,7 +320,7 @@ const loginHandler = async (request, h) => {
 };
 
 const addTransaksiHandler = async (request, h) => {
-  const { user_id, namalengkap, namatukang, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total } = request.payload;
+  const { user_id, namalengkap, namatukang, tukang_id, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total } = request.payload;
 
   if (!user_id || !namalengkap || !deskripsi || !tanggal || !alamat || !metodePembayaran || !total) {
     return h
@@ -332,7 +332,7 @@ const addTransaksiHandler = async (request, h) => {
   }
 
   const id_transaksi = nanoid(10);
-  const transaksi = { id_transaksi, user_id, namalengkap, namatukang, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total, createdAt: new Date().toISOString() };
+  const transaksi = { id_transaksi, user_id, namalengkap, namatukang, tukang_id, spesialis, deskripsi, tanggal, alamat, metodePembayaran, total, createdAt: new Date().toISOString() };
 
   try {
     await db.collection("TRANSAKSI").doc(id_transaksi).set(transaksi);
@@ -454,7 +454,37 @@ const getDetailTukang = async (request, h) => {
   }
 };
 
-module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler, updateTukang, getDetailTukang };
+const getDetailTransaksi = async (request, h) => {
+  const { id_transaksi } = request.params;
+   try {
+    const transaksiSnapshot = await db.collection("TRANSAKSI").where("id_transaksi","==", id_transaksi).get();
+
+    if (transaksiSnapshot.empty){
+      return h
+        .response({
+          status: "fail",
+          message: "Transaksi tidak ditemukan",
+        })
+        .code(404);
+    }
+
+    const riwayatresult = transaksiSnapshot.docs.map((doc) => doc.data());
+
+    return h.response({
+      status: "success",
+      detailtransaksi: riwayatresult,
+    })
+   } catch (error) {
+      return h.response({
+        status: "fail",
+        message: "Terjadi kesalahan saat mengambil riwayat transaksi",
+        error: error.message,
+      })
+      .code(404);
+   }
+}
+
+module.exports = { registerHandler, addTukang, getAlluser, getAllTukang, getDataBeranda, getDetailProfile, searchHandler, loginHandler, addTransaksiHandler, getTransaksiHandler, getRiwayatHandler, updateTukang, getDetailTukang, getDetailTransaksi };
 
 // push api
 
