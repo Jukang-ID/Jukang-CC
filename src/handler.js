@@ -107,12 +107,10 @@ const updateTukang = async (request, h) => {
   const { namatukang, spesialis, review, booked } = request.payload;
 
   if (!tukang_id) {
-    return h
-      .response({
-        status: "fail",
-        message: "Tukang ID tidak ditemukan",
-      })
-      .code(400);
+    return h.response({
+      status: "fail",
+      message: "Tukang ID tidak ditemukan",
+    }).code(400);
   }
 
   try {
@@ -120,50 +118,51 @@ const updateTukang = async (request, h) => {
     const tukangDoc = await tukangRef.get();
 
     if (!tukangDoc.exists) {
-      return h
-        .response({
-          status: "fail",
-          message: "Data tukang tidak ditemukan",
-        })
-        .code(404);
+      return h.response({
+        status: "fail",
+        message: "Data tukang tidak ditemukan",
+      }).code(404);
     }
 
     const tukangData = tukangDoc.data();
 
-    // Perbarui `totalReviewRating` dan `reviewCount` dengan review baru
-    const updatedReviewCount = (tukangData.reviewCount || 0) + 1;
-    const updatedTotalReviewRating = (tukangData.totalReviewRating || 0) + review;
-    const averageReview = updatedTotalReviewRating / updatedReviewCount;
+
+    const currentReviewCount = tukangData.reviewCount || 0;
+    const currentTotalReviewRating = parseFloat(tukangData.totalReviewRating) || 0;
+    const newReview = parseFloat(review);
+
+    // Perbarui `totalReviewRating` dan `reviewCount`
+    const updatedReviewCount = currentReviewCount + 1;
+    const updatedTotalReviewRating = currentTotalReviewRating + newReview;
+    const averageReview = (updatedTotalReviewRating / updatedReviewCount).toFixed(1);
 
     // Data yang akan diperbarui
     const updatedtukang = {
       namatukang: namatukang || tukangData.namatukang,
       spesialis: spesialis || tukangData.spesialis,
-      review: averageReview, // Rata-rata baru
-      reviewCount: updatedReviewCount, // Jumlah review diperbarui
+      review: averageReview,                     // Rata-rata baru
+      reviewCount: updatedReviewCount,            // Jumlah review diperbarui
       totalReviewRating: updatedTotalReviewRating, // Total rating diperbarui
       booked: booked !== undefined ? booked : tukangData.booked,
     };
 
     await tukangRef.update(updatedtukang);
 
-    return h
-      .response({
-        status: "success",
-        message: "Tukang berhasil diperbarui",
-        tukang: updatedtukang,
-      })
-      .code(200);
+    return h.response({
+      status: "success",
+      message: "Tukang berhasil diperbarui",
+      tukang: updatedtukang,
+    }).code(200);
+
   } catch (error) {
-    return h
-      .response({
-        status: "fail",
-        message: "Tukang gagal diperbarui",
-        error: error.message,
-      })
-      .code(500);
+    return h.response({
+      status: "fail",
+      message: "Tukang gagal diperbarui",
+      error: error.message,
+    }).code(500);
   }
 };
+
 
 const getAlluser = async (request, h) => {
   try {
