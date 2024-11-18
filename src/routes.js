@@ -94,3 +94,5 @@ module.exports = routes;
 
 
 // duplikat file
+
+// Path: src/routes.js
