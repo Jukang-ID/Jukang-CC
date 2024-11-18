@@ -50,12 +50,17 @@ const addTukang = async (request, h) => {
   const photoNumber = Math.floor(Math.random() * 70) + 1;
   const photoUrl = `https://i.pravatar.cc/300?img=${photoNumber}`;
   const price = Math.floor(Math.random() * (150000 - 50000 + 1)) + 50000;
+
+  const cities = ["Jakarta Pusat", "Jakarta Selatan", "Jakarta Timur", "Jakarta Utara", "Jakarta Barat",
+    "Bogor", "Depok", "Tangerang", "Bekasi"];
   const priceRupiah = price.toLocaleString("id-ID", {
     currency: "IDR",
     style: "currency",
   });
 
   const { namatukang, spesialis, review = 0, booked = false } = request.payload;
+
+  const randomcities = cities[Math.floor(Math.random()*cities.length)];
 
   // Set `reviewCount` ke 1 jika review diberikan saat penambahan, atau 0 jika belum ada review.
   const reviewCount = review > 0 ? 1 : 0;
@@ -71,6 +76,7 @@ const addTukang = async (request, h) => {
     booked,
     photoUrl,
     priceRupiah,
+    randomcities
   };
 
   if (!namatukang || !spesialis) {
@@ -149,7 +155,7 @@ const updateTukang = async (request, h) => {
       reviewCount: updatedReviewCount,            // Jumlah review diperbarui
       totalReviewRating: updatedTotalReviewRating, // Total rating diperbarui
       booked: booked !== undefined ? booked : tukangData.booked,
-      domisili: randomcities,
+      domisili: tukangData.domisili || randomcities,
     };
 
     await tukangRef.update(updatedtukang);
