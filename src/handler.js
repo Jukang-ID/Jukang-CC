@@ -106,6 +106,9 @@ const updateTukang = async (request, h) => {
   const { tukang_id } = request.params;
   const { namatukang, spesialis, review, booked } = request.payload;
 
+  const cities = ["Jakarta Pusat", "Jakarta Selatan", "Jakarta Timur", "Jakarta Utara", "Jakarta Barat",
+    "Bogor", "Depok", "Tangerang", "Bekasi"];
+
   if (!tukang_id) {
     return h.response({
       status: "fail",
@@ -136,6 +139,8 @@ const updateTukang = async (request, h) => {
     const updatedTotalReviewRating = currentTotalReviewRating + newReview;
     const averageReview = (updatedTotalReviewRating / updatedReviewCount).toFixed(1);
 
+    const randomcities = cities[Math.floor(Math.random()*cities.length)];
+
     // Data yang akan diperbarui
     const updatedtukang = {
       namatukang: namatukang || tukangData.namatukang,
@@ -144,6 +149,7 @@ const updateTukang = async (request, h) => {
       reviewCount: updatedReviewCount,            // Jumlah review diperbarui
       totalReviewRating: updatedTotalReviewRating, // Total rating diperbarui
       booked: booked !== undefined ? booked : tukangData.booked,
+      domisili: randomcities,
     };
 
     await tukangRef.update(updatedtukang);
@@ -543,6 +549,8 @@ const getDetailTukang = async (request, h) => {
 
 const getDetailTransaksi = async (request, h) => {
   const { id_transaksi } = request.params;
+
+  let IsRating = false;
   try {
     const transaksiSnapshot = await db.collection("TRANSAKSI").where("id_transaksi", "==", id_transaksi).get();
 
