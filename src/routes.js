@@ -10,6 +10,9 @@ const {
   addTransaksiHandler,
   getTransaksiHandler,
   getRiwayatHandler,
+  updateTukang,
+  getDetailTukang,
+  getDetailTransaksi,
 } = require("./handler");
 
 routes = [
@@ -35,9 +38,14 @@ routes = [
   },
   {
     method: "GET",
-    path: "/tukang/{user_id}",
+    path: "/tukang/{users_id}",
     handler: getDataBeranda,
   },
+{
+    method: "POST",
+    path: "/tukang/{tukang_id}",
+    handler: updateTukang,
+},
   {
     method: "GET",
     path: "/detailprofile/{user_id}",
@@ -65,6 +73,26 @@ routes = [
     path: '/riwayat/{user_id}', 
     handler: getRiwayatHandler, 
   },
+  {
+    method: "GET",
+    path: "/",
+    handler: () => "Ini adalah halaman utama",
+  },
+  {
+    method: "GET",
+    path: "/detailtukang/{tukang_id}",
+    handler: getDetailTukang,
+  },
+  {
+    method: "GET",
+    path: "/detailtransaksi/{id_transaksi}",
+    handler: getDetailTransaksi
+  }
 ];
 
 module.exports = routes;
+
+
+// duplikat file
+
+// Path: src/routes.js
