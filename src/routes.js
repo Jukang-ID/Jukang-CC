@@ -13,6 +13,8 @@ const {
   updateTukang,
   getDetailTukang,
   getDetailTransaksi,
+  rekomendtukang,
+  getTukangByLokasiHandler,
 } = require("./handler");
 
 routes = [
@@ -87,7 +89,18 @@ routes = [
     method: "GET",
     path: "/detailtransaksi/{id_transaksi}",
     handler: getDetailTransaksi
+  },
+  {
+    method: "GET",
+    path: "/tukangbylokasi/{domisili}",
+    handler: getTukangByLokasiHandler,
   }
+  // {
+  //   method: "POST",
+  //   path: "/rectukang",
+  //   handler: rekomendtukang,
+
+  // }
 ];
 
 module.exports = routes;
