@@ -650,20 +650,32 @@ const getDetailTransaksi = async (request, h) => {
 
 const getTukangByLokasiHandler = async (request, h) => {
   try {
-    const { domisili } = request.params;
-    
-    const tukangSnapshot = await db.collection("TUKANG").where("domisili", "==", domisili).get();
+    const { domisili } = request.query;
 
-    if (tukangSnapshot.empty){
+    if (!domisili) {
+      // Jika domisili tidak diberikan, ambil semua data
       const allSnapshot = await db.collection("TUKANG").get();
-      const allTukang = [];
-      allSnapshot.forEach(doc => {
-        allTukang.push({ id: doc.id, ...doc.data() });
+      const tukangList = [];
+      allSnapshot.forEach((doc) => {
+        tukangList.push({ id: doc.id, ...doc.data() });
       });
 
-      return h.response ({
+      return h.response({
         status: "success",
-        allTukang
+        tukangList,
+      }).code(200);
+    }
+
+    const tukangSnapshot = await db
+      .collection("TUKANG")
+      .where("domisili", "==", domisili)
+      .get();
+
+    if (tukangSnapshot.empty) {
+      return h.response({
+        status: "success",
+        tukangList: [],
+        message: "Tidak ada tukang di lokasi tersebut.",
       }).code(200);
     }
 
@@ -683,7 +695,7 @@ const getTukangByLokasiHandler = async (request, h) => {
       message: error.message,
     }).code(500);
   }
-}
+};
 
 // const rekomendtukang = async (request, h) => {
 //   const { jarak, lokasi, rating,  } = request.payload;

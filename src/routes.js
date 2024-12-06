@@ -92,7 +92,7 @@ routes = [
   },
   {
     method: "GET",
-    path: "/tukangbylokasi/{domisili}",
+    path: "/tukangbylokasi",
     handler: getTukangByLokasiHandler,
   }
   // {
