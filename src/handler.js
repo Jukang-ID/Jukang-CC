@@ -674,8 +674,7 @@ const getTukangByLokasiHandler = async (request, h) => {
 
     return h.response({
       status: "success",
-      message: `Berhasil mendapatkan tukang di domisili: ${domisili}`,
-      data: tukangList,
+      tukangList,
     }).code(200);
 
   } catch (error) {
