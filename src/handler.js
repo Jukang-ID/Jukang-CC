@@ -2,8 +2,8 @@ const { nanoid } = require("nanoid");
 const db = require("./firebase");
 const { messaging } = require("firebase-admin");
 const { v4: uuidv4 } = require("uuid");
-const loadModel = require("./services/loadmodel");
 const tf = require("@tensorflow/tfjs-node");
+const axios = require("axios");
 
 const registerHandler = async (request, h) => {
   const { namalengkap, nomortelp, email, password } = request.payload;
@@ -69,7 +69,17 @@ const addTukang = async (request, h) => {
     style: "currency",
   });
 
-  const { namatukang, spesialis, review = 0, booked = false } = request.payload;
+  const { namatukang , review = 0, booked = false } = request.payload;
+
+  const spesialisList = [
+    "Reparasi atap",
+    "Reparasi saluran air",
+    "Reparasi lantai dan dinding",
+    "Instalasi listrik",
+    "Reparasi aksesoris"
+  ];
+
+  const randomSpesialis =  spesialisList[Math.floor(Math.random() * spesialisList.length)];
 
   const randomcities = cities[Math.floor(Math.random() * cities.length)];
 
@@ -80,7 +90,7 @@ const addTukang = async (request, h) => {
   const newtukang = {
     tukang_id,
     namatukang,
-    spesialis,
+    randomSpesialis,
     review,
     reviewCount,
     totalReviewRating,
@@ -90,7 +100,7 @@ const addTukang = async (request, h) => {
     randomcities,
   };
 
-  if (!namatukang || !spesialis) {
+  if (!namatukang) {
     return h
       .response({
         status: "fail",
@@ -321,43 +331,59 @@ const getDetailProfile = async (request, h) => {
 };
 
 const searchHandler = async (request, h) => {
-  const { namatukang } = request.query;
+  const { text } = request.payload;
+  const timestamp = new Date().toISOString();
+
+  console.log(`Received input text: ${text}`);
 
   try {
-    const tukangRef = db.collection("TUKANG");
-    let tukangSnapshot;
-    if (namatukang) {
-      tukangSnapshot = await tukangRef
-        .where("namatukang", ">=", namatukang)
-        .where("namatukang", "<=", namatukang + "\uf8ff")
-        .get();
-      if (tukangSnapshot.empty) {
-        tukangSnapshot = await tukangRef
-          .where("namatukang", ">=", namatukang)
-          .where("namatukang", "<=", namatukang + "\uf8ff")
-          .get();
-      }
-    } else {
-      tukangSnapshot = await tukangRef.get();
+    // Kirim input ke endpoint model machine learning
+    const modelResponse = await axios.post('https://modelimg-177471570498.asia-southeast2.run.app/predict', { text });
+    console.log("Model response:", modelResponse.data);
+
+    if (modelResponse.status !== 200 || !modelResponse.data.prediction) {
+      throw new Error('Error dari endpoint model machine learning');
     }
 
-    const tukangs = tukangSnapshot.docs.map((doc) => doc.data());
-    const response = h.response({
-      status: "success",
-      data: {
-        tukangs,
-      },
+    const predictions = modelResponse.data.prediction;
+    console.log(`Model predictions: ${predictions}`);
+
+    await db.collection('HISTORYSEARCH').add({
+      text: text,
+      prediction: predictions,
+      timestamp: timestamp,  // Menyimpan waktu pencarian
     });
-    response.code(200);
-    return response;
+
+    // Ambil data tukang dari Firebase berdasarkan spesialis
+    const tukangSnapshot = await db.collection('TUKANG').where('spesialis', '==', predictions).get();
+
+    if (tukangSnapshot.empty) {
+      return h.response({
+        status: 'success',
+        data: [],
+        message: 'Tidak ada tukang yang sesuai dengan spesialisasi.',
+      }).code(200);
+    }
+
+    const tukangList = [];
+    tukangSnapshot.forEach(doc => {
+      tukangList.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    return h.response({
+      status: 'success',
+      tukangList,
+    }).code(200);
+
   } catch (error) {
-    const response = h.response({
-      status: "fail",
-      message: "Tukang gagal ditemukan",
-      error: error.message,
-    });
-    response.code(404);
-    return response;
+    console.error('Error processing request:', error);
+    return h.response({
+      status: 'error',
+      message: 'Terjadi kesalahan saat memproses permintaan.',
+    }).code(500);
   }
 };
 
@@ -697,36 +723,6 @@ const getTukangByLokasiHandler = async (request, h) => {
   }
 };
 
-// const rekomendtukang = async (request, h) => {
-//   const { jarak, lokasi, rating,  } = request.payload;
-//   try {
-//     const model = await tf.loadLayersModel(
-//       "https://storage.googleapis.com/model-jukangid/model-in-prod/model.json"
-//     );
-
-//     const tukangData = await getAllTukang();
-//     const inputData = tukangData.map((tukang) => [
-//       tukang.review || 0, // Default 0 jika tidak ada
-//       tukang.reviewCount || 0, // Default 0 jika tidak ada
-//       jarak,
-//       lokasi === "Jabodetabek" ? 1 : 0, // Binary encoding untuk lokasi
-//     ]);
-//     const tensorInput = tf.tensor2d(inputData);
-//     const predictions = model.predict(tensorInput).arraySync();
-
-//     const hasilRekomendasi = tukangData.map((tukang, index) => ({
-//       ...tukang,
-//       skorRekomendasi: predictions[index][0],
-//     }));
-//     hasilRekomendasi.sort((a, b) => b.skorRekomendasi - a.skorRekomendasi);
-
-//     return h.response({ rekomendasi: hasilRekomendasi }).code(200);
-//   } catch (error) {
-//     console.error('Error dalam rekomendasi:', error);
-//     return h.response({ error: 'Gagal melakukan rekomendasi' }).code(500);
-//   }
-// };
-
 module.exports = {
   registerHandler,
   addTukang,
@@ -743,7 +739,6 @@ module.exports = {
   getDetailTukang,
   getDetailTransaksi,
   getTukangByLokasiHandler
-  // rekomendtukang,
 };
 
 // push api

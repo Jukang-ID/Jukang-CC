@@ -54,7 +54,7 @@ routes = [
     handler: getDetailProfile,
   },
   {
-    method: "GET",
+    method: "POST",
     path: "/search",
     handler: searchHandler,
   },
@@ -95,12 +95,6 @@ routes = [
     path: "/tukangbylokasi",
     handler: getTukangByLokasiHandler,
   }
-  // {
-  //   method: "POST",
-  //   path: "/rectukang",
-  //   handler: rekomendtukang,
-
-  // }
 ];
 
 module.exports = routes;
