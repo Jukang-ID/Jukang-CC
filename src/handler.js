@@ -90,14 +90,14 @@ const addTukang = async (request, h) => {
   const newtukang = {
     tukang_id,
     namatukang,
-    randomSpesialis,
+    spesialis : randomSpesialis,
     review,
     reviewCount,
     totalReviewRating,
     booked,
     photoUrl,
     priceRupiah,
-    randomcities,
+    domisili: randomcities,
   };
 
   if (!namatukang) {
