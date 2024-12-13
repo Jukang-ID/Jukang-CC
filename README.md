@@ -3,7 +3,7 @@
 1. [What is Jukang ID?](#what-is-jukang-id)
 2. [Installation](#installation)
 3. [API Endpoints](#api-endpoints)
-4. [Jukang Team CC](#team-jukang-id-cc)
+4. [Jukang Team CC](#team-jukang-id---cc)
 ## What is Jukang ID?
 Jukang ID is an Application to helps homeowners in Indonesia easily find reliable handymen for repairs, construction, or renovations. Many people struggle with uncertainties around pricing, quality, and availability when relying on personal recommendations. Our application solves this by connecting users to professional handymen, providing clear details about skills, availability, ratings, and pricing, making the process faster and more reliable.
 ## Installation
