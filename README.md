@@ -48,4 +48,4 @@ The server will be accessible at `http://0.0.0.0:8080`.
 |------------------|--------------------|---------------------|-------------------------------------|----------|
 | c529b4ky1707    | Hanif Fahruddin   | Cloud Computing     | Politeknik Negeri Pontianak | [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/hanif-fahruddin-bb3646330/) |
 | C529B4KY0633    | Ariel Wira Ramadhan	  | Cloud Computing     | Politeknik Negeri Pontianak | [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ariel-wira-ramadan-135a76330/) |
-# Note that code in this repository is dummy because our actual repo containing secret so we need to private it
+Note that code in this repository is dummy because our actual repo containing secret so we need to private it
