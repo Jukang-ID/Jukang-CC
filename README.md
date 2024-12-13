@@ -1,14 +1,11 @@
 # Jukang-CC
----
 ## Table of Contents
 1. [What is Jukang ID?](#what-is-jukangid)
 2. [Installation](#installation)
 3. [API Endpoints](#api-endpoints)
 4. [Jukang Team CC](#team-jukang-cc)
----
 ## What is Jukang ID?
 Jukang ID is an Application to helps homeowners in Indonesia easily find reliable handymen for repairs, construction, or renovations. Many people struggle with uncertainties around pricing, quality, and availability when relying on personal recommendations. Our application solves this by connecting users to professional handymen, providing clear details about skills, availability, ratings, and pricing, making the process faster and more reliable.
----
 ## Installation
 ### Step 1: Clone the Repository
 ```bash
@@ -18,7 +15,6 @@ git clone https://github.com/Jukang-ID/Jukang-CC.git
 ```bash
 npm install
 ```
----
 ## Running the Project
 ### Start the Server
 ```bash
@@ -29,7 +25,6 @@ npm start
 npm run start:dev
 ```
 The server will be accessible at `http://0.0.0.0:8080`.
----
 ## API Endpoints
 - **Register**: `POST/register`
 - **Get All users**: `GET/register`
@@ -46,7 +41,6 @@ The server will be accessible at `http://0.0.0.0:8080`.
 - **GET Detail Tukang**: `/detailtukang/{tukang_id}`
 - **GET Detail Transaksi**: `/detailtransaksi/{id_transaksi}`
 - **Get Tukang by Lokasi**: `/tukangbylokasi`
----
 
 ## Team Jukang ID - CC
 
