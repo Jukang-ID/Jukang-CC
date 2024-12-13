@@ -29,7 +29,7 @@ The server will be accessible at `http://0.0.0.0:8080`.
 - **Register**: `POST/register`
 - **Get All users**: `GET/register`
 - **Add tukang**: `POST/tukang`
-- **Get All tuknag**: `GET/tukang`
+- **Get All tukang**: `GET/tukang`
 - **Get data beranda**: `GET//tukang/{users_id}`
 - **Update data tukang**: `/tukang/{tukang_id}`
 - **Detail profile user**: `/detailprofile/{user_id}`
